@@ -7,21 +7,22 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 
-from kittykounter.models import LastUpdate
-
+from kittykounter.models import DoorEvent
+from django.utils import timezone
 def mainView(request):
     if request.method == "GET":
-        lastUpdate = LastUpdate.objects.get(pk=1)
-        #return HttpResponse(lastUpdate.lastdatetime)
+        lastUpdate = DoorEvent.objects.get(pk=1)
         response_data = {}
         response_data['time'] = lastUpdate.lastdatetime
+        response_data['direction'] = lastUpdate.direction
+        response_data['kount'] = lastUpdate.kount
         return render(request, 'kittykounter/stats.html', response_data)
 
 @csrf_exempt
 def updateView(request):
     print "yes"
     if request.method == "GET":
-        lastUpdate = LastUpdate.objects.get(pk=1)
+        lastUpdate = DoorEvent.objects.get(pk=1)
         lastUpdate.lastdatetime = timezone.now()
         lastUpdate.save()
         return HttpResponse(lastUpdate.lastdatetime)
